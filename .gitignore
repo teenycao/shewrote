@@ -1,0 +1,12 @@
+data/raw/
+data/interim/
+data/out/site/
+.DS_Store
+__pycache__/
+*.pyc
+node_modules/
+package.json
+package-lock.json
+# 全量开源字体(OFL/CC0,体积大不入库;运行 scripts/fetch_fonts.py 下载)
+assets/fonts/*.ttf
+assets/fonts/*.otf

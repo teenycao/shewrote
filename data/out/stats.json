@@ -1,0 +1,56 @@
+{
+ "generated": "2026-07-17",
+ "inputs": {
+  "cbdb": "cbdb_20260627.sqlite3",
+  "chinese_poetry": "clone 2026-07-03",
+  "werneror_poetry": "clone 2026-07-03"
+ },
+ "layers": {
+  "A": {
+   "label": "Tang-Song (chinese-poetry)",
+   "poems_total": 333451,
+   "buckets": {
+    "resolved": 217802,
+    "multi_consensus": 83926,
+    "unmatched": 9240,
+    "multi": 6981,
+    "era_conflict": 5807,
+    "monk": 4342,
+    "anonymous": 3591,
+    "institutional": 1640,
+    "shi_pattern": 122
+   },
+   "female_poems": 1095,
+   "female_poems_share_of_all": 0.003284,
+   "female_poems_share_of_gender_known": 0.003638,
+   "female_authors_resolved": 104,
+   "authors_resolved": 5899,
+   "female_author_share": 0.01763,
+   "poems_per_author_female": 10.5,
+   "poems_per_author_male": 37.3
+  },
+  "B": {
+   "label": "pre-Qin through Qing (Werneror/Poetry)",
+   "poems_total": 763542,
+   "buckets": {
+    "resolved": 429903,
+    "multi_consensus": 250071,
+    "unmatched": 43877,
+    "multi": 13574,
+    "monk": 10377,
+    "era_conflict": 8583,
+    "anonymous": 5143,
+    "institutional": 1760,
+    "shi_pattern": 254
+   },
+   "female_poems": 11481,
+   "female_poems_share_of_all": 0.015037,
+   "female_poems_share_of_gender_known": 0.016917,
+   "female_authors_resolved": 893,
+   "authors_resolved": 11672,
+   "female_author_share": 0.076508,
+   "poems_per_author_female": 12.0,
+   "poems_per_author_male": 38.8
+  }
+ }
+}

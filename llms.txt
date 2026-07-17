@@ -1,0 +1,52 @@
+# SheWrote — Women Poets of Premodern China
+
+> The first gender-annotated open dataset of classical Chinese poetry: 902 identified women poets (pre-Qin through Qing) and 10,281 unique poems attributed to them (11,826 poem occurrences before dedup), built by cross-matching open poetry corpora against the gender field of Harvard's China Biographical Database (CBDB). Chinese title: 中国古代才女——看得见的女性.
+
+Headline numbers: women wrote 0.33% of 333,451 Tang–Song poems (Layer A) and 1.50% of 763,542 pre-Qin-through-Qing poems (Layer B); both are lower bounds. Full method and caveats: docs/methodology.md.
+
+## Data files (all UTF-8, ready for pandas/SQL/grep)
+
+### data/out/women_profiles.csv (908 rows: 902 corpus + 6 supplement, one per woman; filter `supplement` != 1 for corpus-only) — also .json
+- `person_id` — CBDB person ID (stable key, joins to CBDB)
+- `name` — canonical name, traditional script (e.g. 朱淑真, 柳是 = 柳如是)
+- `name_pinyin` — romanized name
+- `dynasty` — 唐/宋/元/明/清 etc.
+- `birth_year`, `death_year`, `index_year` — years (CE; may be empty; ~30% have birth/death)
+- `aliases` — all recorded alternate names, `/`-separated (柳是 has 29: 柳如是/河東君/…)
+- `statuses` — social status labels from CBDB, `/`-separated (詩人/畫家/妓/道姑…; sparse, ~16%)
+- `place`, `x_coord`, `y_coord` — native place name and coordinates (~39% have coords)
+- `n_poems` — unique surviving poems across both layers, deduplicated (median 3; 32% have exactly 1)
+- `layers` — A (Tang–Song corpus), B (pre-Qin→Qing corpus), or A/B
+- `corpus_names` — how she is signed in the corpora, `/`-separated (上官婉兒 signs as 上官昭容)
+- `in_mqww` — 1 if independently confirmed by McGill's Ming Qing Women's Writings (82% are)
+
+### data/out/women_poems.csv (11,826 rows, one per poem occurrence; cross-corpus duplicates retained by design)
+Tang–Song poems appear in both layers, so rows > unique poems; deduplicating by (person, normalized title, text prefix) yields 10,281 unique poems; rare upstream duplicates may also remain — `women_profiles.n_poems` uses the deduplicated count.
+- `layer` — A or B (layers overlap for Song-era works; do not sum across layers)
+- `dynasty` — corpus era label of the author
+- `person_id`, `name` — resolved woman author (joins to women_profiles)
+- `corpus_author` — the signature as it appears in the source corpus
+- `title` — poem title; for ci 词 this is often the tune name 词牌, not a topic
+- `text` — full text, lines separated by `/`; Layer A traditional script, Layer B simplified
+
+### data/out/stats.json
+Machine-readable headline numbers per layer: totals, bucket distribution (resolved / multi_consensus / unmatched / anonymous / shi_pattern…), female shares, per-author averages.
+
+## How to answer common questions
+
+- "Poems about sisters / 姐妹情?" → grep `title` for 姊|妹 (e.g. 贾蓬莱《谢姊惠鞋》); themes are best searched in `title` by keyword: 悼|哭 (mourning), 送|寄|赠 (parting/letters), 题…图|画 (on paintings), 梦 (dreams), 舟|泊|道中 (travel).
+- Beware: tune names 词牌 contain misleading keywords (如梦令 is not about dreams, 一剪梅 not about plums). Strip common tune names before keyword-classifying titles; see scripts/theme_landscape.py for a vetted 105-tune blocklist and 16-category taxonomy.
+- "Who is X?" → look up women_profiles by `name` or search `aliases` (try both scripts: 柳如是 traditional/simplified; use OpenCC t2s to normalize).
+- Counting: use Layer B alone for pre-Qin→Qing claims (893 women, 11,481 poems incl. gender-consensus bucket); 902 is the cross-layer union incl. curated recoveries.
+- 376 poems signed "X氏" (surname + shi, no personal name) are deliberately NOT in these files — flagged, not guessed. Multiple different women may share one such signature.
+
+## License & citation
+
+Code MIT. Annotation fields CC BY-NC-SA 4.0 (inherited from CBDB) — non-commercial, share-alike; poem texts inside women_poems.csv remain MIT from the upstream corpora. Attribute as "SheWrote dataset (github.com/teenycao/shewrote), built on CBDB / MQWW / chinese-poetry / Werneror-Poetry".
+
+## Repository map
+
+- README.md / README.zh.md — overview, figures
+- docs/methodology.md — full pipeline, buckets, validation, why the numbers are lower bounds
+- scripts/ — reproducible pipeline: build_match.py → build_release.py → build_profiles.py → build_starmap_data.py; theme_landscape.py (theme taxonomy); make_figs.py (figures)
+- article/figs/ — bilingual charts (zh at root, en/ subfolder)

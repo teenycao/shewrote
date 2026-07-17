@@ -1,0 +1,7 @@
+# core pipeline
+opencc
+# figures & assets (optional for data reproduction)
+matplotlib
+wordcloud
+fonttools
+pillow
